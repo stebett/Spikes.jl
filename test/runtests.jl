@@ -1,6 +1,8 @@
 using Spikes
 using Test
+using SafeTestsets
+
 
 @testset "Spikes.jl" begin
-    # Write your tests here.
+	@safetestset "bin" begin include("bin-test.jl") end
 end
