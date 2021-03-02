@@ -61,3 +61,13 @@ function relative!(x::Vector{<:Vector{<:Real}}, df::DataFrame)
 	p = Pair.(df.index, eachindex(df.index))
 	replace!.(x, p...)
 end
+
+function absolute!(x::Vector{<:Vector{<:Real}}, df::DataFrame)
+	p = Pair.(eachindex(df.index), df.index)
+	replace!.(x, p...)
+end
+
+function absolute(x::Vector{<:Vector{<:Real}}, df::DataFrame)
+	p = Pair.(eachindex(df.index), df.index)
+	replace.(x, p...)
+end

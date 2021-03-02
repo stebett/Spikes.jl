@@ -12,10 +12,15 @@ function cut(x::Vector{T}, y::T, z::Vector{T})::Vector{Float64} where {T <: Real
 	@views x[y + z[1] .<= x .<= y + z[2]] .- y .- z[1]
 end
 
-@inline function cut(x::Vector{T}, z::Tuple{T, T})::Vector{Float64} where {T <: Real}
+
+@inline function abscut(x::Vector{T}, z::Tuple{T, T})::Vector{Float64} where {T <: Real}
 	@views x[z[1] .<= x .<= z[2]]  
 end
 
-@inline function cut(x::Vector{T}, z::Vector{<:Tuple{T, T}})::Vector{Float64} where {T <: Real}
-	vcat(cut.(Ref(x), z)...)
+@inline function abscut(x::Vector{T}, z::Vector{<:Tuple{T, T}})::Vector{Float64} where {T <: Real}
+	vcat(abscut.(Ref(x), z)...)
+end
+
+@inline function abscut(x::T, y::T, z::T)::Array{Float64, 1} where {T <: Vector{<:Real}}
+	vcat(abscut.(Ref(x), [(x + z[1], x + z[2]) for x in y])...)
 end

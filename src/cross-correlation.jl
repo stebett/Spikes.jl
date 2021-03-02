@@ -2,13 +2,24 @@ using Statistics
 import StatsBase.crosscor
 import StatsBase.crosscor!
 
-@inline function crosscor_c(df, c, active_c, binsize) 
+@inline function crosscor_c(df, c, active_c::Dict, binsize, norm=true) 
 	r = zeros(81, length(c))
 	lags = -40. * binsize : binsize : 40. * binsize
 	@inbounds for i = eachindex(c)
-		c1 = cut(df[df.index .== c[i][1], :t]..., active_c[c[i]]) 
-		c2 = cut(df[df.index .== c[i][2], :t]..., active_c[c[i]])
-		crosscor!(view(r, :, i), c1, c2, lags, true, binsize=binsize)
+		c1 = abscut(df[df.index .== c[i][1], :t]..., active_c[c[i]]) 
+		c2 = abscut(df[df.index .== c[i][2], :t]..., active_c[c[i]])
+		crosscor!(view(r, :, i), c1, c2, lags, norm, binsize=binsize)
+	end
+	r
+end
+
+@inline function crosscor_c(df, c, around::Vector, binsize, norm=true) 
+	r = zeros(81, length(c))
+	lags = -40. * binsize : binsize : 40. * binsize
+	@inbounds for i = eachindex(c)
+		c1 = abscut(df[df.index .== c[i][1], :t]..., df[df.index .== c[i][1], :cover]..., around) 
+		c2 = abscut(df[df.index .== c[i][2], :t]..., df[df.index .== c[i][2], :cover]..., around)
+		crosscor!(view(r, :, i), c1, c2, lags, norm, binsize=binsize)
 	end
 	r
 end
@@ -27,27 +38,11 @@ end
 	end
 end
 
-@inline function crosscor(x::Vector, y::Vector, norm::Bool; binsize::Real)
-	lags = -40. * binsize : binsize : 40. * binsize
-
-	if isempty(x) || isempty(y) || any(isinf.(x)) || any(isinf.(y))
-		return fill(NaN, length(lags))
-	end
-
-	bins = zeros(length(lags))
-	center = ceil(Int, length(lags)/2)
-
-	@inbounds for k in x
-	    bins .+= [sum([k+i .<= y .< k+i+binsize]...) for i = lags] # is this faster if y is sorted?
-	end
-	if norm
-		# return bins ./ (length(x)*length(y)*binsize/(max(x..., y...)-min(x...,y...)))
-		# return (bins .- median(bins)) ./ mad(bins)
-		return zscore(bins)
-	end
-	bins
+@inline function crosscor(x::Vector, y::Vector, norm::Bool; binsize::Real, lags=[-40:40;])
+	r = zeros(length(lags))
+	crosscor!(r, x, y, lags, norm, binsize=binsize)
+	r
 end
-
 
 # @inline function crosscor(df, cells::Array{Int64, 1}, around::Vector, args...; binsize::Number, lags=[-40:40;], thr=1.5)
 

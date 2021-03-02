@@ -15,22 +15,24 @@ include("sort.jl")
 include("average.jl")
 
 
-export bin,
-	   deviation,
+export absolute,
+	   absolute!,
 	   average,
-	   relative!,
+	   bin,
 	   convolve,
 	   couple,   
 	   crosscor,
 	   crosscor_c,
 	   cut,
+	   deviation,
 	   drop,
 	   get_active_trials,
 	   merge_trials,
 	   normalize,
+	   relative!,
 	   section,
-	   section_trial,
 	   sectionTrial,
+	   section_trial,
 	   sort_active,
 	   sort_peaks
 end

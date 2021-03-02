@@ -1,6 +1,6 @@
 
 function section_trial(r::Vector{T}, x::Vector{T}, around::Vector{<:Tuple}, binsizes::Vector{T}) where {T <:Real}
-	r .= cut.(Ref(x), around) |> k->(length.(k)./binsizes) |> k->vcat(k...)
+	r .= abscut.(Ref(x), around) |> k->(length.(k)./binsizes) |> k->vcat(k...)
 end
 
 function section_trial(r::Vector{T}, ranges::Vector{<:Tuple}, bins::Vector{T}, 
