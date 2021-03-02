@@ -16,6 +16,7 @@ include("average.jl")
 
 
 export bin,
+	   deviation,
 	   average,
 	   relative!,
 	   convolve,
