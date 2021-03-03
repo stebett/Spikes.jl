@@ -1,5 +1,6 @@
 module Spikes
 
+include("average.jl")
 include("bin.jl")
 include("convolve.jl")
 include("couple.jl")
@@ -7,12 +8,11 @@ include("cross-correlation.jl")
 include("cut.jl")
 include("drop.jl")
 include("filter-active.jl")
+include("multi-psth.jl")
 include("normalize.jl")
-include("section.jl")
 include("section-trial.jl")
-include("sectionTrial.jl")
+include("section.jl")
 include("sort.jl")
-include("average.jl")
 
 
 export absolute,
@@ -27,12 +27,15 @@ export absolute,
 	   deviation,
 	   drop,
 	   get_active_trials,
+	   get_active_from_merged,
 	   merge_trials,
+	   multi_psth,
 	   normalize,
+	   relative,
 	   relative!,
 	   section,
-	   sectionTrial,
 	   section_trial,
 	   sort_active,
-	   sort_peaks
+	   sort_peaks,
+	   sort_peaks!
 end

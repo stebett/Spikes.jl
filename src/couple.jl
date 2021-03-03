@@ -57,9 +57,16 @@ function get_neighbors(df::DataFrame)
 	[g.index for g in groupby(df, [:rat, :site, :tetrode])]
 end
 
+"""
+take a vector `x` of ids and turns it in the positional index of the dataframe
+"""
 function relative!(x::Vector{<:Vector{<:Real}}, df::DataFrame)
 	p = Pair.(df.index, eachindex(df.index))
 	replace!.(x, p...)
+end
+
+function relative(x::Int, df::DataFrame)
+	findall(df.index .== x)[1]
 end
 
 function absolute!(x::Vector{<:Vector{<:Real}}, df::DataFrame)
@@ -71,3 +78,4 @@ function absolute(x::Vector{<:Vector{<:Real}}, df::DataFrame)
 	p = Pair.(eachindex(df.index), df.index)
 	replace.(x, p...)
 end
+
