@@ -1,3 +1,6 @@
+import Base.diff
+
+diff(x::Tuple) = x[2] - x[1]
 
 function get_active_trials(mpsth, ranges, thr)
 	active_trials = []

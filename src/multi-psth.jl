@@ -1,4 +1,3 @@
-using Infiltrator
 
 function multi_psth(r::Vector{T}, x::Vector{T}, around::Vector{<:Tuple}, binsizes::Vector{T}) where {T <:Real}
 	r .= abscut.(Ref(x), around) |> k->(length.(k)) |> k->vcat(k...)
@@ -30,6 +29,7 @@ function multi_psth(df, pad::Int, n::Int, b1::Int)
 	ranges = [[Array{T, 1}(undef, l) for _ in 1:length(i)] for i in df.lift]
 
 	multi_psth(r, ranges, bins, df, pad, n, b1)
+	r = [sum(x) ./ sum([diff.(y) for y in rng]) for (x, rng) in zip(r, ranges)]
 	return r, ranges
 end
 

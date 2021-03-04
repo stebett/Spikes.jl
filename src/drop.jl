@@ -12,6 +12,9 @@ function drop(v::Matrix; dims=1, nan=true, inf=true, index=false)
 		return todrop
 	end
 
+	if dims == 2
+		return v[.!todrop, :]
+	end
 	v[:, .!todrop]
 end
 
