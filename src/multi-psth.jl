@@ -1,4 +1,3 @@
-using Infiltrator
 
 function multi_psth(r::Vector{T}, x::Vector{T}, around::Vector{<:Tuple}, binsizes::Vector{T}) where {T <:Real}
 	r .= abscut.(Ref(x), around) |> k->(length.(k)) |> k->vcat(k...)

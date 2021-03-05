@@ -1,9 +1,9 @@
 module Spikes
 
-include("average.jl")
+include("average.jl") 
 include("bin.jl")
 include("convolve.jl")
-include("couple.jl")
+include("couple.jl") # Move to project
 include("cross-correlation.jl")
 include("cut.jl")
 include("drop.jl")

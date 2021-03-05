@@ -18,23 +18,6 @@ function couple(df::DataFrame, kind::Symbol)
 	end
 end
 
-function get_pairs(df::DataFrame, kind::String)
-	@warn "This function is deprecated, use couple instead with kind::Symbol"
-	if kind == "neigh" || kind == "neighbors" || kind == "n"
-		neigh = get_neighbors(df) |> x->filter(y->length(y)>1, x)
-	    couples = [x for n in neigh for x in collect(combinations(n, 2))]
-		return couples
-
-	elseif kind == "dist" || kind == "distant" || kind == "d"
-		dist = get_distant(df)
-		couples = unique(sort.(dist))
-		return couples
-
-	elseif kind == "all" || kind == "a"
-		return collect(combinations(df.index, 2))
-	end
-end
-
 
 function get_distant(df::DataFrame)
 
