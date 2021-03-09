@@ -1,4 +1,5 @@
 using Statistics
+using StatsBase
 import StatsBase.crosscor
 import StatsBase.crosscor!
 
@@ -25,6 +26,7 @@ end
 end
 
 @inline function crosscor!(r, x::Vector, y::Vector, lags, norm::Bool; binsize::Real)
+	@assert all(diff(lags) .== binsize) 
 	if isempty(x) || isempty(y) || any(isinf.(x)) || any(isinf.(y))
 		r .= NaN
 		return
@@ -43,65 +45,3 @@ end
 	crosscor!(r, x, y, lags, norm, binsize=binsize)
 	r
 end
-
-# @inline function crosscor(df, cells::Array{Int64, 1}, around::Vector, args...; binsize::Number, lags=[-40:40;], thr=1.5)
-
-# 	x = cut(df[(df.index .== cells[1]), "t"], df[(df.index .== cells[1]), "cover"], around)
-# 	y = cut(df[(df.index .== cells[2]), "t"], df[(df.index .== cells[2]), "cover"], around)
-
-# 	x = vcat((x...)...) #Can't concatenate trials like this!
-# 	y = vcat((y...)...)
-	
-# 	if isempty(x[x.>0]) || isempty(y[y.>0]) 
-# 		return fill(NaN, length(lags))
-# 	end
-
-# 	if :preimp in args
-# 		return crosscor(x, y, lags, demean=true)
-# 	end
-
-# 	if :norm in args
-# 		return crosscor(x, y, true, binsize=binsize)
-# 	end
-
-# 	crosscor(x, y, false, binsize=binsize)
-# end
-
-# @inline function crosscor(df, cells::Array{Int64, 1}, around::Vector{<:Tuple}, args...; binsize::Number, lags=[-40:40;], thr=1.5)
-
-# 	if isempty(around)
-# 		return [fill(NaN, length(lags))]
-# 	end
-
-# 	# section around active ranges and concat each trial with its parts
-# 	x = vcat.([cut(df[(df.index .== cells[1]), "t"], df[(df.index .== cells[1]), "cover"], i) for i in around]...)
-# 	y = vcat.([cut(df[(df.index .== cells[2]), "t"], df[(df.index .== cells[2]), "cover"], i) for i in around]...) # TODO test
-	
-# 	if :preimp in args
-# 		return crosscor.(x, y, Ref(lags), demean=true)
-# 	end
-
-# 	if :norm in args
-# 		return crosscor.(x, y, true, binsize=binsize) #, lags=lags)
-# 	end
-
-# 	crosscor.(x, y, false, binsize=binsize) # TODO lags=lags)
-# end
-
-# function crosscor(df, couples::Array{Array{Int64, 1}, 1}, around::Vector,  args...; binsize::Number, lags=[-40:40;], thr=1.5)
-# 	m = zeros(length(lags), length(couples))
-# 	for (i, c) in enumerate(couples)
-# 		m[:, i] = crosscor(df, c, around, args..., binsize=binsize, thr=thr, lags=lags)
-# 	end
-# 	m
-# end
-
-# function crosscor(df, couples::Array{Array{Int64, 1}, 1}, around::Dict,  args...; binsize::Number, lags=[-40:40;], thr=1.5)
-# 	active(x) = Tuple{Float64, Float64}[around[x[1]]..., around[x[2]]...]
-# 	# for (i, c) in enumerate(couples)
-# 	# 	m[:, i] = crosscor(df, c, active(c), args..., binsize=binsize, thr=thr, lags=lags)
-# 	# end
-# 	# m
-# 	crosscor.(Ref(df), couples, active.(couples), Ref(args...), binsize=binsize, thr=thr) 
-# end
-
