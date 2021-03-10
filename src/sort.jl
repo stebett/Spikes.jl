@@ -1,5 +1,4 @@
 using Statistics
-using Infiltrator
 
 function sort_active(n::Matrix, center::Int)
 	n = drop(n)
